@@ -6,4 +6,4 @@ I have taken the most recent census data, imported it and processed it state by 
 
 Please share and if you see any errors or improvements feel free to contribute.
 
-You can also view this calculator live @ kevinchriste.pythonanywhere.com
+You can also view this calculator live @ [www.kevinchriste.pythonanywhere.com](https://kevinchriste.pythonanywhere.com)
