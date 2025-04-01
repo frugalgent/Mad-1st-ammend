@@ -9,7 +9,7 @@ from io import BytesIO
 
 app = Flask(__name__)
 
-DB_NAME = "/home/kevinchriste/madison_project/census_data.db"
+DB_NAME = ".../census_data.db"     # Put your DB location here
 TABLE_NAME = "state_population"
 
 def get_results():
