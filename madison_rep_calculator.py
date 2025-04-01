@@ -3,7 +3,7 @@ import sqlite3
 import pandas as pd
 
 # URL for census data (update if necessary)
-CENSUS_API_URL = "https://api.census.gov/data/2020/dec/pl?get=NAME,P1_001N&for=state:*&key=808d796f7763bc01ffaff601695c85e784eea615"
+CENSUS_API_URL = "https://api.census.gov/data/2020/dec/pl?get=NAME,P1_001N&for=state:*&key=<ADD YOUR API KEY HERE>"
 
 # SQLite Database
 DB_NAME = "census_data.db"
