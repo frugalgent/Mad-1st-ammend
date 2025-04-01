@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Madison's Representation Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <!-- Prevent Mobile Browsers from Auto-Linking Numbers -->
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- Include MathJax for rendering math -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 10px;
+      padding: 10px;
+      max-width: 100%;
+    }
+    .container {
+      max-width: 90%;
+      margin: auto;
+    }
+    h1 {
+      font-size: 22px;
+    }
+    .amendment-text {
+      font-style: normal;
+      text-align: justify;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .purpose {
+      font-style: normal;
+      text-align: justify;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .citation {
+      margin-top: 5px;
+      font-size: 12px;
+    }
+
+    .formula-explanation {
+      text-align: left;
+      margin: 0 auto 10px auto; /* Removed top margin */
+      font-size: 14px;
+    }
+    .download-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .download-btn {
+      padding: 10px;
+      font-size: 14px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      width: 150px;
+      text-align: center;
+    }
+    .download-btn:hover {
+      background-color: #0056b3;
+    }
+    .excel-btn {
+      background-color: #28a745;
+    }
+    .excel-btn:hover {
+      background-color: #218838;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: auto;
+      min-width: 600px;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+      /* Prevent auto-linking of numbers */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    th {
+      background-color: #f2f2f2;
+      position: relative;
+    }
+    .sort-dropdown {
+      border: none;
+      background: none;
+      font-size: 14px;
+      cursor: pointer;
+      appearance: none;
+      padding: 5px;
+      margin-left: 5px;
+    }
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 18px;
+      }
+      .amendment-text {
+        font-size: 12px;
+      }
+      .download-btn {
+        font-size: 12px;
+        padding: 8px;
+        width: 130px;
+      }
+      .table-container {
+        overflow-x: auto;
+        display: block;
+      }
+      table {
+        min-width: 100%;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 12px;
+      }
+      .sort-dropdown {
+        font-size: 12px;
+        padding: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Madison's 1st Amendment Representative Calculator</h1>
+
+    <!-- New Purpose Section -->
+    <div class="purpose">
+        <p>
+            <strong>Purpose:</strong><br>
+            This website is designed to simulate the number of representatives each state would have if Madison's original representation proposal were implemented. It uses current census data and applies Madison's formula to estimate state representation.
+        </p>
+    </div>
+
+    <div class="amendment-text">
+      <p>
+        <strong>Madison's Original First Amendment:</strong><br>
+            <em>
+                "After the first enumeration required by the first article of the Constitution, there shall be one Representative for every thirty thousand,
+                until the number shall amount to one hundred, after which the proportion shall be so regulated by Congress, that there shall be not less than
+                one hundred Representatives, nor less than one Representative for every forty thousand persons, until the number of Representatives shall amount
+                to two hundred; after which the proportion shall be so regulated by Congress, that there shall not be less than two hundred Representatives,
+                nor more than one Representative for every fifty thousand persons."
+            </em>
+      </p>
+
+      <p class="citation">
+        Source:
+        <a href="https://www.archives.gov/founding-docs/bill-of-rights-transcript" target="_blank">
+          National Archives – Bill of Rights Transcript
+        </a>
+      </p>
+
+      <!-- Combined definitions and formula list -->
+      <div class="formula-explanation">
+        <p style="margin:0;">
+          <strong>Formula:</strong><br>
+          The following formula is the formula used to calculate the number of representatives per state.<br>
+          Where \(P\) is the state's population and \(R(P)\) is the number of representatives allocated to that state.
+        </p>
+        <ol style="margin-top:5px;">
+          <li>
+            <strong>For \( P \leq 3{,}000{,}000 \):</strong><br>
+            \( R(P) = \left\lfloor \frac{P}{30\,000} \right\rfloor \)<br>
+            (This gives one representative for every 30,000 people.)
+          </li>
+          <li>
+            <strong>For \( 3{,}000{,}000 < P \leq 8{,}000{,}000 \):</strong><br>
+            \( R(P) = \max\left(100,\ \left\lfloor \frac{P}{40\,000} \right\rfloor\right) \)<br>
+            (In this range, a state gets at least 100 representatives, and thereafter one representative for every 40,000 people, up to 200 reps.)
+          </li>
+          <li>
+            <strong>For \( P > 8{,}000{,}000 \):</strong><br>
+            \( R(P) = \max\left(200,\ \left\lfloor \frac{P}{50\,000} \right\rfloor\right) \)<br>
+            (For populations above 8,000,000, a state must have at least 200 representatives, but not more than one representative for every 50,000 people.)
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="download-buttons">
+      <a href="/download" class="download-btn">Download as CSV</a>
+      <a href="/download-excel" class="download-btn excel-btn">Download as Excel</a>
+      <a href="/download-pdf" class="download-btn" style="background-color: #d63384;">Download as PDF</a>
+      <a href="/download-json" class="download-btn" style="background-color: #6f42c1;">Download as JSON</a>
+      <button class="download-btn" onclick="window.print()" style="background-color: #ffc107;">Print Results</button>
+    </div>
+
+    <div class="table-container">
+      <table id="sortableTable">
+        <thead>
+          <tr>
+            <th>
+              State
+              <select class="sort-dropdown" id="sortState" onchange="handleSort(0, this)">
+                <option value="">▼</option>
+                <option value="asc">A → Z</option>
+                <option value="desc">Z → A</option>
+              </select>
+            </th>
+            <th>
+              Population
+              <select class="sort-dropdown" id="sortPopulation" onchange="handleSort(1, this)">
+                <option value="">▼</option>
+                <option value="asc">Low → High</option>
+                <option value="desc">High → Low</option>
+              </select>
+            </th>
+            <th>
+              Representatives
+              <select class="sort-dropdown" id="sortReps" onchange="handleSort(2, this)">
+                <option value="">▼</option>
+                <option value="asc">Fewest → Most</option>
+                <option value="desc">Most → Fewest</option>
+              </select>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in results %}
+          <tr>
+            <td>{{ row.State }}</td>
+            <td class="no-link">{{ row.Population }}</td>
+            <td>{{ row.Representatives }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+    <!-- Footer with contact info -->
+    <footer>
+         <p><em>Contact:</em></p>
+         <p><a>Mail: </a><a href="mailto:kevin@frugalgent.com">kevin@frugalgent.com</a><a> | </a><a>Blue Sky: </a><a href="https://bsky.app/profile/frugalgent.com" target="_blank">frugalgent.com</a></p>
+    </footer>
+  </div>
+
+  <script>
+    function handleSort(columnIndex, dropdown) {
+      // Clear other dropdown selections
+      document.getElementById("sortState").value = columnIndex === 0 ? dropdown.value : "";
+      document.getElementById("sortPopulation").value = columnIndex === 1 ? dropdown.value : "";
+      document.getElementById("sortReps").value = columnIndex === 2 ? dropdown.value : "";
+
+      if (!dropdown.value) return;
+      sortTable(columnIndex, dropdown.value);
+    }
+
+    function sortTable(columnIndex, order) {
+      if (!order) return;
+      const table = document.getElementById("sortableTable");
+      const tbody = table.querySelector("tbody");
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      rows.sort((a, b) => {
+        let valA = a.cells[columnIndex].textContent.trim();
+        let valB = b.cells[columnIndex].textContent.trim();
+        const isNumeric = !isNaN(valA) && !isNaN(valB);
+        if (isNumeric) {
+          valA = parseFloat(valA);
+          valB = parseFloat(valB);
+        } else {
+          valA = valA.toLowerCase();
+          valB = valB.toLowerCase();
+        }
+        return order === "asc" ? (valA > valB ? 1 : valA < valB ? -1 : 0) : (valA < valB ? 1 : valA > valB ? -1 : 0);
+      });
+      tbody.append(...rows);
+    }
+  </script>
+</body>
+</html>
